@@ -125,7 +125,7 @@ def GetTrendyMapId():
   def CreateTimeBand(img):
     year = ee.Date(img.get('system:time_start')).get('year').subtract(1991)
     return ee.Image(year).byte().addBands(img)
-  collection = collection.select('stable_lights').map(CreateTimeBand)
+  collection = collection.select(BAND_NAME).map(CreateTimeBand)
 
   # Fit a linear trend to the nighttime lights collection.
   fit = collection.reduce(ee.Reducer.linearFit())
@@ -161,7 +161,7 @@ def GetPolygonTimeSeries(polygon_id):
 def ComputePolygonTimeSeries(polygon_id):
   """Returns a series of brightness over time for the polygon."""
   collection = ee.ImageCollection(IMAGE_COLLECTION_ID)
-  collection = collection.select('stable_lights').sort('system:time_start')
+  collection = collection.select(BAND_NAME).sort('system:time_start')
   feature = GetFeature(polygon_id)
 
   # Compute the mean brightness in the region in each image.
@@ -169,7 +169,7 @@ def ComputePolygonTimeSeries(polygon_id):
     reduction = img.reduceRegion(
         ee.Reducer.mean(), feature.geometry(), REDUCTION_SCALE_METERS)
     return ee.Feature(None, {
-        'stable_lights': reduction.get('stable_lights'),
+        BAND_NAME: reduction.get(BAND_NAME),
         'system:time_start': img.get('system:time_start')
     })
   chart_data = collection.map(ComputeMean).getInfo()
@@ -178,7 +178,7 @@ def ComputePolygonTimeSeries(polygon_id):
   def ExtractMean(feature):
     return [
         feature['properties']['system:time_start'],
-        feature['properties']['stable_lights']
+        feature['properties'][BAND_NAME]
     ]
   return map(ExtractMean, chart_data['features'])
 
@@ -205,7 +205,11 @@ MEMCACHE_EXPIRATION = 60 * 60 * 24
 
 # The ImageCollection of the night-time lights dataset. See:
 # https://earthengine.google.org/#detail/NOAA%2FDMSP-OLS%2FNIGHTTIME_LIGHTS
-IMAGE_COLLECTION_ID = 'NOAA/DMSP-OLS/NIGHTTIME_LIGHTS'
+IMAGE_COLLECTION_ID = 'MODIS/MOD08_M3_051'
+# 'NOAA/DMSP-OLS/NIGHTTIME_LIGHTS'
+
+# Originally, the band name was hardcoded. Set here
+BAND_NAME = 'Optical_Depth_Land_And_Ocean_Mean_Mean'
 
 # The file system folder path to the folder with GeoJSON polygon files.
 POLYGON_PATH = 'static/polygons/'
