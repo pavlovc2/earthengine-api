@@ -69,6 +69,10 @@ import webapp2
 
 from google.appengine.api import memcache
 
+from google.appengine.api import urlfetch
+
+urlfetch.set_default_fetch_deadline(10000)
+
 
 ###############################################################################
 #                             Web request handlers.                           #
@@ -123,15 +127,15 @@ def GetTrendyMapId():
 
   # Add a band containing image date as years since 1991.
   def CreateTimeBand(img):
-    year = ee.Date(img.get('system:time_start')).get('year').subtract(1991)
+    year = ee.Date(img.get('system:time_start')).get('year').subtract(2000)
     return ee.Image(year).byte().addBands(img)
-  collection = collection.select(BAND_NAME).map(CreateTimeBand)
+  collection = collection.select('Optical_Depth_Land_And_Ocean_Mean_Mean').map(CreateTimeBand)
 
   # Fit a linear trend to the nighttime lights collection.
   fit = collection.reduce(ee.Reducer.linearFit())
   return fit.getMapId({
       'min': '0',
-      'max': '0.18,20,-0.18',
+      'max': '10,2000,-40',
       'bands': 'scale,offset,scale',
   })
 
@@ -161,7 +165,7 @@ def GetPolygonTimeSeries(polygon_id):
 def ComputePolygonTimeSeries(polygon_id):
   """Returns a series of brightness over time for the polygon."""
   collection = ee.ImageCollection(IMAGE_COLLECTION_ID)
-  collection = collection.select(BAND_NAME).sort('system:time_start')
+  collection = collection.select('Optical_Depth_Land_And_Ocean_Mean_Mean').sort('system:time_start')
   feature = GetFeature(polygon_id)
 
   # Compute the mean brightness in the region in each image.
@@ -169,7 +173,7 @@ def ComputePolygonTimeSeries(polygon_id):
     reduction = img.reduceRegion(
         ee.Reducer.mean(), feature.geometry(), REDUCTION_SCALE_METERS)
     return ee.Feature(None, {
-        BAND_NAME: reduction.get(BAND_NAME),
+        'Optical_Depth_Land_And_Ocean_Mean_Mean': reduction.get('Optical_Depth_Land_And_Ocean_Mean_Mean'),
         'system:time_start': img.get('system:time_start')
     })
   chart_data = collection.map(ComputeMean).getInfo()
@@ -177,10 +181,14 @@ def ComputePolygonTimeSeries(polygon_id):
   # Extract the results as a list of lists.
   def ExtractMean(feature):
     return [
-        feature['properties']['system:time_start'],
-        feature['properties'][BAND_NAME]
+		feature['properties']['system:time_start'],
+        feature['properties']['Optical_Depth_Land_And_Ocean_Mean_Mean']
+		#feature.get('system:time_start'),
+		#feature.get('output_band')
     ]
-  return map(ExtractMean, chart_data['features'])
+  chart_data_lists = map(ExtractMean, chart_data['features'])
+  print(chart_data_lists)
+  return chart_data_lists
 
 
 def GetFeature(polygon_id):
@@ -215,7 +223,7 @@ BAND_NAME = 'Optical_Depth_Land_And_Ocean_Mean_Mean'
 POLYGON_PATH = 'static/polygons/'
 
 # The scale at which to reduce the polygons for the brightness time series.
-REDUCTION_SCALE_METERS = 20000
+REDUCTION_SCALE_METERS = 2000
 
 # The Wikipedia URL prefix.
 WIKI_URL = 'http://en.wikipedia.org/wiki/'

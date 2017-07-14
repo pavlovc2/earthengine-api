@@ -19,7 +19,7 @@ trendy.boot = function(eeMapId, eeToken, serializedPolygonIds) {
   // Load external libraries.
   google.load('visualization', '1.0');
   google.load('jquery', '1');
-  google.load('maps', '3', {'other_params': 'key=your-api-key-here'});
+  google.load('maps', '3', {'other_params': 'key='});
 
   // Create the Trendy Lights app.
   google.setOnLoadCallback(function() {
@@ -167,7 +167,7 @@ trendy.App.prototype.showChart = function(timeseries) {
     chartType: 'LineChart',
     dataTable: data,
     options: {
-      title: 'Brightness over time',
+      title: 'MODIS AOD Over Time',
       curveType: 'function',
       legend: {position: 'none'},
       titleTextStyle: {fontName: 'Roboto'}
@@ -212,11 +212,11 @@ trendy.App.EE_URL = 'https://earthengine.googleapis.com';
 
 
 /** @type {number} The default zoom level for the map. */
-trendy.App.DEFAULT_ZOOM = 4;
+trendy.App.DEFAULT_ZOOM = 3;
 
 
 /** @type {Object} The default center of the map. */
-trendy.App.DEFAULT_CENTER = {lng: 5, lat: 50};
+trendy.App.DEFAULT_CENTER = {lng: 0, lat: 0};
 
 
 /**
