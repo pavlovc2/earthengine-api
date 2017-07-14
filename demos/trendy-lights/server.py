@@ -187,7 +187,6 @@ def ComputePolygonTimeSeries(polygon_id):
 		#feature.get('output_band')
     ]
   chart_data_lists = map(ExtractMean, chart_data['features'])
-  print(chart_data_lists)
   return chart_data_lists
 
 
