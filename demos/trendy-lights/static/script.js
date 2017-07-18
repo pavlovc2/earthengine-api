@@ -216,7 +216,7 @@ trendy.App.DEFAULT_ZOOM = 3;
 
 
 /** @type {Object} The default center of the map. */
-trendy.App.DEFAULT_CENTER = {lng: 0, lat: 0};
+trendy.App.DEFAULT_CENTER = {lng: 0, lat: 25};
 
 
 /**
