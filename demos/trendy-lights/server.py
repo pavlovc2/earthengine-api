@@ -129,7 +129,7 @@ def GetTrendyMapId():
   def CreateTimeBand(img):
     year = ee.Date(img.get('system:time_start')).get('year').subtract(2000)
     return ee.Image(year).byte().addBands(img)
-  collection = collection.select('Optical_Depth_Land_And_Ocean_Mean_Mean').map(CreateTimeBand)
+  collection = collection.select('Aerosol_Optical_Depth_Land_Ocean_Mean_Mean').map(CreateTimeBand)
 
   # Fit a linear trend to the nighttime lights collection.
   fit = collection.reduce(ee.Reducer.linearFit())
