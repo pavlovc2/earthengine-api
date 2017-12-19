@@ -165,7 +165,7 @@ def GetPolygonTimeSeries(polygon_id):
 def ComputePolygonTimeSeries(polygon_id):
   """Returns a series of brightness over time for the polygon."""
   collection = ee.ImageCollection(IMAGE_COLLECTION_ID)
-  collection = collection.select('Optical_Depth_Land_And_Ocean_Mean_Mean').sort('system:time_start')
+  collection = collection.select('Aerosol_Optical_Depth_Land_Ocean_Mean_Mean').sort('system:time_start')
   feature = GetFeature(polygon_id)
 
   # Compute the mean brightness in the region in each image.
@@ -173,7 +173,7 @@ def ComputePolygonTimeSeries(polygon_id):
     reduction = img.reduceRegion(
         ee.Reducer.mean(), feature.geometry(), REDUCTION_SCALE_METERS)
     return ee.Feature(None, {
-        'Optical_Depth_Land_And_Ocean_Mean_Mean': reduction.get('Optical_Depth_Land_And_Ocean_Mean_Mean'),
+        'Aerosol_Optical_Depth_Land_Ocean_Mean_Mean': reduction.get('Aerosol_Optical_Depth_Land_Ocean_Mean_Mean'),
         'system:time_start': img.get('system:time_start')
     })
   chart_data = collection.map(ComputeMean).getInfo()
@@ -182,7 +182,7 @@ def ComputePolygonTimeSeries(polygon_id):
   def ExtractMean(feature):
     return [
 		feature['properties']['system:time_start'],
-        feature['properties']['Optical_Depth_Land_And_Ocean_Mean_Mean']
+        feature['properties']['Aerosol_Optical_Depth_Land_Ocean_Mean_Mean']
 		#feature.get('system:time_start'),
 		#feature.get('output_band')
     ]
@@ -212,11 +212,11 @@ MEMCACHE_EXPIRATION = 60 * 60 * 24
 
 # The ImageCollection of the night-time lights dataset. See:
 # https://earthengine.google.org/#detail/NOAA%2FDMSP-OLS%2FNIGHTTIME_LIGHTS
-IMAGE_COLLECTION_ID = 'MODIS/MOD08_M3_051'
+IMAGE_COLLECTION_ID = 'MODIS/006/MOD08_M3'
 # 'NOAA/DMSP-OLS/NIGHTTIME_LIGHTS'
 
 # Originally, the band name was hardcoded. Set here
-BAND_NAME = 'Optical_Depth_Land_And_Ocean_Mean_Mean'
+# BAND_NAME = 'Aerosol_Optical_Depth_Land_Ocean_Mean_Mean'
 
 # The file system folder path to the folder with GeoJSON polygon files.
 POLYGON_PATH = 'static/polygons/'
