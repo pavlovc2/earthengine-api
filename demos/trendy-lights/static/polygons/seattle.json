@@ -1,0 +1,35 @@
+{
+  "type": "Feature",
+  "properties": {
+    "title": "Seattle",
+    "id": "seattle"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+         [
+         -123,
+         48
+         ],
+         [
+		 -123,
+         47
+         ],
+         [
+         -122,
+         47
+         ],
+         [
+         -122,
+         48
+         ],
+		 [
+         -123,
+         48
+         ]
+      ]
+    ]
+  }
+}
+
