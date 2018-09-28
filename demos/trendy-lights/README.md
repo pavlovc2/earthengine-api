@@ -10,8 +10,8 @@ It uses memcache to cache results and avoid exceeding request quotas.
 
 To set up the app yourself, download the Earth Engine API repository from GitHub:
 
-    git clone https://github.com/pavlovc2/earthengine-api.git
-    
+    git clone https://github.com/google/earthengine-api.git
+
 Navigate to the Trendy Lights example code:
 
     cd ./earthengine-api/demos/trendy-lights/

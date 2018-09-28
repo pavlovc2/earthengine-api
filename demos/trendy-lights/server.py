@@ -135,7 +135,7 @@ def GetTrendyMapId():
   fit = collection.reduce(ee.Reducer.linearFit())
   return fit.getMapId({
       'min': '0',
-      'max': '10,2000,-40',
+      'max': '10,500,-10',
       'bands': 'scale,offset,scale',
   })
 
@@ -216,7 +216,7 @@ IMAGE_COLLECTION_ID = 'MODIS/006/MOD08_M3'
 # 'NOAA/DMSP-OLS/NIGHTTIME_LIGHTS'
 
 # Originally, the band name was hardcoded. Set here
-# BAND_NAME = 'Aerosol_Optical_Depth_Land_Ocean_Mean_Mean'
+BAND_NAME = 'Aerosol_Optical_Depth_Land_Ocean_Mean_Mean'
 
 # The file system folder path to the folder with GeoJSON polygon files.
 POLYGON_PATH = 'static/polygons/'

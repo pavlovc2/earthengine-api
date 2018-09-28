@@ -1,0 +1,35 @@
+{
+  "type": "Feature",
+  "properties": {
+    "title": "Australia",
+    "id": "australia"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+         [
+         118,
+         -21
+         ],
+         [
+		 118,
+         -28
+         ],
+         [
+         135,
+         -28
+         ],
+         [
+         135,
+         -21
+         ],
+		 [
+         118,
+         -21
+         ]
+      ]
+    ]
+  }
+}
+
